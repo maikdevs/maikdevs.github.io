@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Miguel Peinado Portfolio | Fullstack Developer</title>
+  <link rel="icon" href="https://img.itch.zone/aW1nLzE2NDYzNTQ1LnBuZw==/35x35%23/48%2F1cR.png" type="image/png">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Rajdhani:wght@400;600&display=swap');
+
+    * {
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    html,
+    body {
+      margin: 0;
+      height: 100%;
+      background: radial-gradient(circle at center, #050510 0%, #000 100%);
+      color: #fff;
+      font-family: 'Rajdhani', sans-serif;
+      overflow: hidden;
+    }
+
+    @media (max-width: 768px) {
+
+      html,
+      body {
+        overflow: auto;
+      }
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    #menu-btn {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(0, 255, 255, 0.15);
+      border: 1px solid rgba(0, 255, 255, 0.4);
+      border-radius: 8px;
+      padding: 0.7em;
+      cursor: pointer;
+      z-index: 30;
+      transition: 0.3s;
+    }
+
+    #menu-btn:hover {
+      background: rgba(0, 255, 255, 0.3);
+    }
+
+    #menu-btn div {
+      width: 25px;
+      height: 3px;
+      background: #00ffff;
+      margin: 5px 0;
+      border-radius: 2px;
+      transition: 0.3s;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 60%;
+      max-width: 300px;
+      height: 100%;
+      background: rgba(10, 10, 20, 0.95);
+      backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2em;
+      transition: right 0.5s ease;
+      z-index: 25;
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    nav.active {
+      right: 0;
+    }
+
+    nav a {
+      color: #00e6e6;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.3em;
+      letter-spacing: 1px;
+      transition: 0.3s;
+    }
+
+    nav a:hover {
+      color: #fff;
+      text-shadow: 0 0 10px #0ff;
+    }
+
+    #name-fixed {
+      position: fixed;
+      top: 0.6em;
+      left: 1.2em;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      color: #00ffff;
+      font-size: 1.5em;
+      text-shadow: 0 0 25px #0ff;
+      z-index: 25;
+      pointer-events: none;
+    }
+
+    .experience-item {
+      margin-bottom: 2.5rem;
+      text-align: left;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .experience-item h3 {
+      color: #00ffff;
+      font-size: 1.6em;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 10px #0ff;
+    }
+
+    .experience-item ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+
+    .experience-item li {
+      margin-bottom: 0.5rem;
+      font-size: 1.2em;
+      line-height: 1.6;
+      position: relative;
+      padding-left: 1.5em;
+    }
+
+    .experience-item li::before {
+      content: "▹";
+      color: #0ff;
+      position: absolute;
+      left: 0;
+    }
+
+    .tech-badge {
+      background: rgba(0, 255, 255, 0.1);
+      color: #00ffff;
+      padding: 0.2em 0.5em;
+      margin-right: 0.3em;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+
+    .sections {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      scroll-snap-type: y mandatory;
+      overflow-y: scroll;
+      z-index: 10;
+    }
+
+    section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      scroll-snap-align: start;
+      transform: scale(0.8);
+      opacity: 0;
+      transition: all 1s ease;
+      padding: 6rem 2rem 4rem;
+    }
+
+    section.active {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    h1,
+    h2 {
+      font-family: 'Orbitron', sans-serif;
+      text-transform: uppercase;
+      text-shadow: 0 0 30px #00ffff;
+      margin: 0.3em 0;
+    }
+
+    h1 {
+      font-size: 3.8em;
+      color: #00ffff;
+    }
+
+    h2 {
+      font-size: 2.3em;
+      color: #ff00ff;
+    }
+
+    p,
+    li {
+      font-size: 1.4em;
+      line-height: 1.9;
+      color: #d2faff;
+      max-width: 950px;
+      margin: 0.7em auto;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li::before {
+      content: "▹";
+      color: #0ff;
+      margin-right: 0.4em;
+    }
+
+    footer {
+      margin-top: 3em;
+      color: #aaa;
+      font-size: 1.1em;
+    }
+
+    #experience.active h2 {
+      color: #00e6ff;
+    }
+
+    #skills.active h2 {
+      color: #ff6bff;
+    }
+
+    #projects.active h2 {
+      color: #00ff9d;
+    }
+
+    #education.active h2 {
+      color: #ffa200;
+    }
+
+    #contact.active h2 {
+      color: #00ffff;
+    }
+
+    .projects-container {
+      display: flex;
+      flex-direction: column;
+      gap: 2em;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .project-card {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 2em;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 1.5em;
+      box-shadow: 0 0 25px rgba(0, 255, 255, 0.15);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .project-card:hover {
+      transform: perspective(800px) rotateY(5deg) scale(1.05);
+      box-shadow: 0 0 40px rgba(0, 255, 255, 0.4);
+    }
+
+    .project-image {
+      width: 180px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+      flex-shrink: 0;
+    }
+
+    .project-info {
+      flex: 1;
+    }
+
+    .project-info h3 {
+      color: #00ffff;
+      margin: 0 0 0.3em 0;
+      font-size: 1.6em;
+    }
+
+    .project-info p {
+      color: #d2faff;
+      font-size: 1.2em;
+      margin-bottom: 0.5em;
+    }
+
+    .project-info a {
+      color: #00ffff;
+      text-decoration: none;
+      font-weight: 600;
+      border-bottom: 1px solid #00ffff;
+      transition: color 0.3s, border-color 0.3s;
+    }
+
+    .project-info a:hover {
+      color: #fff;
+      border-color: #fff;
+    }
+
+    @media (min-width: 768px) {
+
+      #menu-btn {
+        display: none;
+      }
+
+      nav {
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        height: auto;
+        background: transparent;
+        border: none;
+        backdrop-filter: none;
+        z-index: 50;
+        padding: 0.5em 0;
+      }
+
+      nav .nav-links {
+        display: flex;
+        flex-direction: row;
+        gap: 2rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      nav .nav-links li {
+        list-style: none;
+      }
+
+      nav a {
+        font-size: 1.15em;
+        color: #00ffff;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      nav a:hover {
+        color: #fff;
+        text-shadow: 0 0 10px #0ff;
+      }
+    }
+
+    @media (max-width: 768px) {
+      nav ul {
+        flex-direction: column;
+        gap: 2em;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .project-card {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .project-image {
+        width: 80%;
+        max-width: 280px;
+      }
+
+      .project-info h3 {
+        font-size: 1.3em;
+      }
+
+      .project-info p {
+        font-size: 1em;
+      }
+
+      p,
+      li {
+        font-size: 1.1em;
+      }
+
+      h1 {
+        font-size: 2.2em;
+      }
+
+      h2 {
+        font-size: 1.6em;
+      }
+
+      section {
+        padding: 4rem 1rem 3rem;
+      }
+
+      .sections {
+        height: auto;
+        scroll-snap-type: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="bg"></canvas>
+  <div id="name-fixed">Miguel Peinado</div>
+  <nav class="navbar">
+    <div class="nav-container">
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#education">Education</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+
+  <div id="menu-btn">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+
+
+  <div class="sections">
+    <section id="hero" class="active">
+      <h1>Fullstack Developer</h1>
+      <h2>Building Cloud-Native Scalable Software</h2>
+      <p>Software engineer with 5+ years of experience in fullstack and cloud-based ecosystems. Passionate about clean
+        architecture, scalability, and delivering maintainable solutions.</p>
+    </section>
+    <section id="experience">
+      <h2>Experience</h2>
+
+
+      <div class="experience-item">
+        <h3>Mid-Fullstack Developer — Igeo ERP Cloud Platform, Madrid (Jun 2023 - Present)</h3>
+        <ul>
+          <li>Leading backend optimization and designing scalable features for ERP cloud solutions.</li>
+          <li>Enhanced microservice performance through asynchronous queues and Kubernetes orchestration.</li>
+          <li>
+            <i>Technologies:</i>
+            <span class="tech-badge">Java</span>
+            <span class="tech-badge">Spring Boot</span>
+            <span class="tech-badge">Angular</span>
+            <span class="tech-badge">NodeJS</span>
+            <span class="tech-badge">PostgreSQL</span>
+            <span class="tech-badge">Docker</span>
+            <span class="tech-badge">GCP</span>
+            <span class="tech-badge">Jenkins</span>
+          </li>
+        </ul>
+      </div>
+
+
+      <div class="experience-item">
+        <h3>Analyst Programmer — Kyndryl / BBVA, Madrid (Jun 2021 - Apr 2023)</h3>
+        <ul>
+          <li>Worked on fintech applications for banking clients, improving batch processing, data integrity, and
+            distributed system performance.</li>
+          <li>Worked across distributed systems, ensuring data integrity and efficiency.</li>
+          <li>
+            <i>Technologies:</i>
+            <span class="tech-badge">Java</span>
+            <span class="tech-badge">Bash</span>
+            <span class="tech-badge">Spark</span>
+            <span class="tech-badge">Angular</span>
+            <span class="tech-badge">Oracle</span>
+            <span class="tech-badge">Scrum</span>
+          </li>
+        </ul>
+      </div>
+
+
+      <div class="experience-item">
+        <h3>Freelance Fullstack Developer — Spain (2019 - Present)</h3>
+        <ul>
+          <li>Delivered fullstack solutions for SMEs: microservices, REST APIs, responsive UIs, and CI/CD pipelines.
+          </li>
+          <li>Worked on both web and mobile applications, including React Native projects.</li>
+          <li>
+            <i>Technologies:</i>
+            <span class="tech-badge">Java</span>
+            <span class="tech-badge">Kotlin</span>
+            <span class="tech-badge">TypeScript</span>
+            <span class="tech-badge">Angular</span>
+            <span class="tech-badge">React Native</span>
+            <span class="tech-badge">Docker</span>
+            <span class="tech-badge">Google Cloud</span>
+            <span class="tech-badge">Figma</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+    <section id="skills">
+      <h2>Skills</h2>
+      <ul>
+        <li><b>Backend:</b> Java, Spring Boot, NodeJS, REST, SQL/NoSQL</li>
+        <li><b>Frontend:</b> Angular, React, TypeScript, Responsive UI/UX</li>
+        <li><b>Apps & Interactive:</b> Android Studio, .NET, React Native, Godot Engine, Unity 6</li>
+        <li><b>Cloud & DevOps:</b> Docker, Kubernetes, Jenkins, CI/CD, Google Cloud</li>
+        <li><b>Architecture:</b> Microservices, Async Messaging, Scalability</li>
+        <li><b>Soft Skills:</b> Agile, Communication, Teamwork, Planning</li>
+      </ul>
+    </section>
+    <section id="projects">
+      <h2>Personal Projects</h2>
+      <div style="display:flex;align-items:center;gap:0.8em;justify-content:center;margin-bottom:1.5em;">
+        <img src="https://img.itch.zone/aW1nLzE2NDYzNTQ1LnBuZw==/35x35%23/48%2F1cR.png"
+          style="width:45px;height:45px;border-radius:50%;box-shadow:0 0 15px #00ffff;">
+        <a href="https://maikdevs.itch.io/" target="_blank"
+          style="color:#00ffff;text-decoration:none;font-size:1.3em;font-weight:600;">maikdevs.itch.io</a>
+      </div>
+
+
+      <div class="projects-container">
+        <div class="project-card">
+          <img src="https://img.itch.zone/aW1nLzE4ODA1OTE5LnBuZw==/315x250%23c/vslVvH.png" alt="PokéWallpaper"
+            class="project-image">
+          <div class="project-info">
+            <h3>PokéWallpaper</h3>
+            <p>3D interactive desktop application generating dynamic Pokémon wallpapers. Developed using
+              <b>JavaScript</b>, <b>C++</b>, and <b>GLB 3D models</b> for real-time animations.</p>
+            <a href="https://maikdevs.itch.io/pokewallpaper" target="_blank">View Project</a>
+          </div>
+        </div>
+
+
+        <div class="project-card">
+          <img src="https://img.itch.zone/aW1nLzE2NTQyOTU1LnBuZw==/315x250%23c/XSOEay.png" alt="Soccer Quest"
+            class="project-image">
+          <div class="project-info">
+            <h3>Soccer Quest</h3>
+            <p>Pixel-art football RPG with story-driven gameplay, tactical mechanics, and humorous interactions. Built
+              in <b>Godot Engine</b> with custom <b>pixel art design</b> assets.</p>
+            <a href="https://maikdevs.itch.io/soccerquest" target="_blank">View Project</a>
+          </div>
+        </div>
+
+
+        <div class="project-card">
+          <img src="https://hearinit.com/_image/?href=%2F_astro%2Flogo.D6pf1HGs.webp&w=802&h=203&f=webp" alt="Hearinit"
+            class="project-image">
+          <div class="project-info">
+            <h3>Hearinit</h3>
+            <p>Startup providing auditory consultancy and a CRM platform tailored for hearing centers. Focused on
+              <b>client management</b>, <b>data-driven recommendations</b>, and improving patient care workflow.</p>
+            <a href="https://hearinit.com/" target="_blank">Visit Site</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+    <section id="education">
+      <h2>Education</h2>
+      <p><b>Higher Dual Degree in Web & Multiplatform App Development</b> — Cesur (2020 - 2023)</p>
+      <!-- <p><b>Bachelor’s Degree in Applied Statistics</b> — UCM (2018 - 2020)</p> -->
+      <p><b>Languages:</b> Spanish (Native), English (B2)</p>
+    </section>
+
+
+    <section id="contact">
+      <h2>Contact</h2>
+      <p>📧 <a href="mailto:miguelp0tena@gmail.com"
+          style="color:#00ffff;text-decoration:none;">miguelp0tena@gmail.com</a></p>
+      <p>🔗 <a href="https://www.linkedin.com/in/miguel-peinado-tena" target="_blank"
+          style="color:#00ffff;text-decoration:none;">LinkedIn Profile</a></p>
+      <p>📍 Madrid, Spain</p>
+    </section>
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script>
+    const canvas = document.getElementById('bg');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+    renderer.setSize(innerWidth, innerHeight);
+    camera.position.z = 10;
+    const geometry = new THREE.BufferGeometry();
+    const count = 2000;
+    const positions = new Float32Array(count * 3);
+    for (let i = 0; i < count * 3; i++) positions[i] = (Math.random() - 0.5) * 60;
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const colors = [];
+    for (let i = 0; i < count; i++) {
+      const color = new THREE.Color(); color.setHSL(Math.random(), 1.0, 0.5);
+      colors.push(color.r, color.g, color.b);
+    }
+    geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+    const material = new THREE.PointsMaterial({ size: 0.08, vertexColors: true });
+    const points = new THREE.Points(geometry, material);
+    scene.add(points);
+    function animate() { requestAnimationFrame(animate); points.rotation.y += 0.0008; points.rotation.x += 0.0004; renderer.render(scene, camera); }
+    animate();
+    window.addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
+
+
+    const container = document.querySelector(".sections");
+    if (window.innerWidth > 768) {
+      container.addEventListener("wheel", e => {
+        e.preventDefault();
+        const sections = [...document.querySelectorAll("section")];
+        const activeIndex = sections.findIndex(s => s.classList.contains("active"));
+        if (e.deltaY > 0 && activeIndex < sections.length - 1)
+          sections[activeIndex + 1].scrollIntoView({ behavior: "smooth" });
+        else if (e.deltaY < 0 && activeIndex > 0)
+          sections[activeIndex - 1].scrollIntoView({ behavior: "smooth" });
+      }, { passive: false });
+    }
+
+
+    const sections = document.querySelectorAll("section");
+
+
+    function getThreshold() {
+      return window.innerWidth <= 768 ? 0.35 : 0.7;
+    }
+
+
+    let observer = new IntersectionObserver(entries => {
+      entries.forEach(e => e.target.classList.toggle("active", e.isIntersecting));
+    }, { threshold: getThreshold() });
+
+
+    function observeSections() {
+      if (observer) observer.disconnect();
+      observer = new IntersectionObserver(entries => {
+        entries.forEach(e => e.target.classList.toggle("active", e.isIntersecting));
+      }, { threshold: getThreshold() });
+
+
+      sections.forEach(s => observer.observe(s));
+    }
+
+
+    observeSections();
+
+
+    window.addEventListener('resize', () => {
+      observeSections();
+    });
+
+
+    window.addEventListener('load', () => {
+      if (![...sections].some(s => s.classList.contains('active'))) {
+        sections.forEach(s => {
+          const r = s.getBoundingClientRect();
+          if (r.top < window.innerHeight && r.bottom > 0) s.classList.add('active');
+        });
+      }
+    });
+
+
+    const menuBtn = document.getElementById('menu-btn');
+    const nav = document.querySelector('nav');
+    menuBtn.addEventListener('click', () => { nav.classList.toggle('active'); });
+  </script>
+</body>
+
+</html>
